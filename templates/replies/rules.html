@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}自动回复规则{% endblock %}
+{% block content %}
+<h2>自动回复规则</h2>
+
+<div class="card mb-4">
+    <div class="card-header">添加新规则</div>
+    <div class="card-body">
+        <form method="post" action="{{ url_for('replies.create_rule') }}">
+            <div class="row">
+                <div class="col-md-3">
+                    <select class="form-select" name="account_id" required>
+                        {% for account in accounts %}
+                        <option value="{{ account.id }}">{{ account.phone }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="keyword" placeholder="关键词" required>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="reply_text" placeholder="回复内容" required>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">添加</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>账号</th>
+            <th>关键词</th>
+            <th>回复内容</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for account in accounts %}
+            {% for rule in account.replies %}
+            <tr>
+                <td>{{ account.phone }}</td>
+                <td>{{ rule.keyword }}</td>
+                <td>{{ rule.reply_text }}</td>
+                <td>
+                    <span class="badge {{ 'bg-success' if rule.is_active else 'bg-secondary' }}">
+                        {{ '启用' if rule.is_active else '禁用' }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ url_for('replies.edit_rule', rule_id=rule.id) }}" class="btn btn-sm btn-outline-primary">编辑</a>
+                    <form method="post" action="{{ url_for('replies.delete_rule', rule_id=rule.id) }}" style="display:inline">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">删除</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

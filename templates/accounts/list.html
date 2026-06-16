@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}账号管理{% endblock %}
+{% block content %}
+<h2>账号管理</h2>
+<a href="{{ url_for('accounts.login') }}" class="btn btn-primary mb-3">添加账号</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>手机号</th>
+            <th>用户名</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for account in accounts %}
+        <tr>
+            <td>{{ account.phone }}</td>
+            <td>{{ account.username or '-' }}</td>
+            <td>
+                <span class="badge {{ 'bg-success' if account.is_active else 'bg-secondary' }}">
+                    {{ '已激活' if account.is_active else '未激活' }}
+                </span>
+            </td>
+            <td>
+                <form method="post" action="{{ url_for('accounts.delete', account_id=account.id) }}" style="display:inline">
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('确定删除？')">删除</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}编辑规则{% endblock %}
+{% block content %}
+<h2>编辑自动回复规则</h2>
+<form method="post">
+    <div class="mb-3">
+        <label class="form-label">关键词</label>
+        <input type="text" class="form-control" name="keyword" value="{{ rule.keyword }}" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">回复内容</label>
+        <textarea class="form-control" name="reply_text" rows="3" required>{{ rule.reply_text }}</textarea>
+    </div>
+    <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" name="is_active" {{ 'checked' if rule.is_active }}>
+        <label class="form-check-label">启用规则</label>
+    </div>
+    <button type="submit" class="btn btn-primary">保存</button>
+    <a href="{{ url_for('replies.rules') }}" class="btn btn-secondary">取消</a>
+</form>
+{% endblock %}

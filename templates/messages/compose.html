@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}群发消息{% endblock %}
+{% block content %}
+<h2>群发消息</h2>
+<form method="post">
+    <div class="mb-3">
+        <label class="form-label">选择账号</label>
+        <select class="form-select" name="account_id" required>
+            {% for account in accounts %}
+            <option value="{{ account.id }}">{{ account.phone }} - {{ account.username or '未设置用户名' }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">接收者（每行一个，用户名或用户ID）</label>
+        <textarea class="form-control" name="recipients" rows="5" required placeholder="@user1&#10;@user2&#10;123456789"></textarea>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">消息内容</label>
+        <textarea class="form-control" name="content" rows="5" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">发送</button>
+    <a href="{{ url_for('messages.history') }}" class="btn btn-secondary">取消</a>
+</form>
+{% endblock %}

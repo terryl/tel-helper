@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}消息历史{% endblock %}
+{% block content %}
+<h2>消息历史</h2>
+<a href="{{ url_for('messages.compose') }}" class="btn btn-primary mb-3">新建群发</a>
+<p class="text-muted">消息发送记录将在此显示。</p>
+{% endblock %}

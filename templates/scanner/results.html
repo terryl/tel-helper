@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}成员扫描{% endblock %}
+{% block content %}
+<h2>群成员扫描</h2>
+
+<div class="card mb-4">
+    <div class="card-header">扫描新群组</div>
+    <div class="card-body">
+        <form method="post" action="{{ url_for('scanner.scan') }}">
+            <div class="row">
+                <div class="col-md-4">
+                    <select class="form-select" name="account_id" required>
+                        {% for account in accounts %}
+                        <option value="{{ account.id }}">{{ account.phone }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="group_identifier" placeholder="群组链接或ID" required>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">扫描</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if groups %}
+<h3>已扫描的群组</h3>
+<div class="list-group mb-4">
+    {% for group in groups %}
+    <a href="{{ url_for('scanner.group_members', group_id=group.id) }}" class="list-group-item list-group-item-action">
+        {{ group.name or group.id }}
+    </a>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if members %}
+<h3>群组成员 ({{ members|length }})</h3>
+<a href="{{ url_for('scanner.export_csv', group_id=group_id) }}" class="btn btn-success mb-3">导出 CSV</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>用户ID</th>
+            <th>用户名</th>
+            <th>姓名</th>
+            <th>在线状态</th>
+            <th>最后在线</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for member in members %}
+        <tr>
+            <td>{{ member.user_id }}</td>
+            <td>{{ member.username or '-' }}</td>
+            <td>{{ member.first_name }} {{ member.last_name or '' }}</td>
+            <td>
+                <span class="badge {{ 'bg-success' if member.is_online else 'bg-secondary' }}">
+                    {{ '在线' if member.is_online else '离线' }}
+                </span>
+            </td>
+            <td>{{ member.last_seen or '-' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{% endblock %}
